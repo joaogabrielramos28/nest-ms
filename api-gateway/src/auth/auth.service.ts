@@ -18,6 +18,17 @@ export interface UserSession {
   } | null;
 }
 
+export interface AuthResponse {
+  access_token: string;
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+  };
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -25,7 +36,7 @@ export class AuthService {
     private readonly httpService: HttpService,
   ) {}
 
-  async validateJwtToken(token: string): Promise<any> {
+  async validateJwtToken(token: string): Promise<AuthResponse> {
     try {
       return this.jwtService.verify(token);
     } catch (error) {
@@ -47,7 +58,7 @@ export class AuthService {
     }
   }
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto): Promise<AuthResponse> {
     try {
       const { data } = await firstValueFrom(
         this.httpService.post(`${serviceConfig.users.url}/login`, loginDto, {
@@ -60,7 +71,7 @@ export class AuthService {
     }
   }
 
-  async register(registerDto: RegisterDto) {
+  async register(registerDto: RegisterDto): Promise<AuthResponse> {
     try {
       const { data } = await firstValueFrom(
         this.httpService.post(
