@@ -42,6 +42,7 @@ export class ProxyService {
       return response;
     } catch (error) {
       this.logger.error(`Error proxying request to ${serviceName}: ${url}`);
+      throw error;
     }
   }
 
