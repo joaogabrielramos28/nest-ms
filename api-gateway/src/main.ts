@@ -62,7 +62,29 @@ async function bootstrap() {
     .setTitle('API Gateway')
     .setDescription('API Gateway for Microservices')
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      name: 'JWT',
+      description: 'Enter JWT token',
+      in: 'header',
+    }, 'JWT-auth')
+    .addApiKey(
+      {
+        type: 'apiKey',
+        name: 'x-session-token',
+        in: 'header',
+        description: 'Session token for user authentication',
+      },
+      'Session-auth',
+    )
+    .addTag('Authentication', 'Endpoints para autenticação e autorização ')
+    .addTag('Users', 'Endpoints para gerenciamento de usuários')
+    .addTag('Products', 'Endpoints para gerenciamento de produtos')
+    .addTag('Checkout', 'Endpoints para gerenciamento de carrinho e pedidos')
+    .addTag('Payment', 'Endpoints para gerenciamento de pagamentos')
+    .addTag('Health', 'Endpoints para verificação de saúde dos serviços')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
